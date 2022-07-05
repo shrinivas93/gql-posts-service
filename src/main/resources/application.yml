@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: gql-posts-service
+
+server:
+  port: 8002
+
+graphql:
+  playground:
+    enabled: true
+  graphiql:
+    enabled: true
+  altair:
+    enabled: true
+  voyager:
+    enabled: true

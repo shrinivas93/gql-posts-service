@@ -1,0 +1,14 @@
+type Query {
+    posts(where: PostFilter): [Post]
+}
+
+type Post {
+    id: Int
+    userId: Int
+    title: String
+    body: String
+}
+
+input PostFilter {
+    userId: Int
+}
