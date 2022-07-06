@@ -1,8 +1,10 @@
-type Query {
+directive @tag(name: String!) repeatable on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
+
+type Query @tag(name: "social-media") {
     posts(where: PostFilter): [Post]
 }
 
-type Post {
+type Post @tag(name: "social-media") {
     id: Int
     userId: Int
     title: String
