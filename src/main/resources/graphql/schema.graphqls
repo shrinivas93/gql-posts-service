@@ -1,10 +1,18 @@
-directive @tag(name: String!) repeatable on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
+#directive @tag(name: String!) repeatable on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
+
+#scalar FieldSet
+
+#directive @key(fields: FieldSet!, resolvable: Boolean = true) repeatable on OBJECT | INTERFACE
+
+extend schema
+@link(url: "https://specs.apollo.dev/federation/v2.0",
+    import: ["@key", "@shareable", "@tag"])
 
 type Query @tag(name: "social-media") {
     posts(where: PostFilter): [Post]
 }
 
-type Post @tag(name: "social-media") {
+type Post @tag(name: "social-media") @key(fields: "id") {
     id: Int
     userId: Int
     title: String
