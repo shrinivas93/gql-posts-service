@@ -16,7 +16,7 @@
     <properties>
         <java.version>1.8</java.version>
         <spring.graphql.version>12.0.0</spring.graphql.version>
-        <unirest.version>3.13.6</unirest.version>
+        <unirest.version>3.13.10</unirest.version>
     </properties>
     <dependencies>
         <dependency>
