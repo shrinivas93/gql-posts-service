@@ -22,6 +22,6 @@ input PostFilter {
 }
 
 type User @tag(name: "social-media") @key(fields: "id") {
-    id: Int @external
+    id: Int
     posts: [Post]
 }
