@@ -7,6 +7,7 @@
 extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable", "@tag"])
 
 type Query @tag(name: "social-media") {
+    """Fetch posts by providing userId"""
     posts(where: PostFilter): [Post]
 }
 
