@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Builder
@@ -14,4 +13,7 @@ import java.util.List;
 public class User {
     Integer id;
     List<Post> posts;
+    public List<Post> getPosts(String body) {
+        return posts;
+    }
 }

@@ -8,6 +8,8 @@ import com.gql.gqlpostsservice.resolver.QueryResolver;
 import graphql.kickstart.tools.SchemaParser;
 import graphql.kickstart.tools.SchemaParserDictionary;
 import graphql.kickstart.tools.SchemaParserOptions;
+import graphql.language.*;
+import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.SchemaPrinter;
 import org.springframework.beans.BeansException;
@@ -35,9 +37,12 @@ public class GraphQLConfig {
                                     if ("User".equals(values.get("__typename"))) {
                                         final Object id = values.get("id");
                                         if (id instanceof Integer) {
+                                            String body = extractValueFromFederatedQuery(env, "User", "posts", "body");
                                             return User.builder()
                                                     .id((Integer) id)
-                                                    .posts(queryResolver.posts(PostFilter.builder().userId((Integer) id).build()))
+                                                    .posts(queryResolver.posts(PostFilter.builder().userId((Integer) id).build()).stream()
+                                                            .filter(post -> post.getBody().contains(body))
+                                                            .collect(Collectors.toList()))
                                                     .build();
                                         }
                                     }
@@ -52,6 +57,35 @@ public class GraphQLConfig {
                     }
                     return null;
                 }).build();
+    }
+
+    private String extractValueFromFederatedQuery(DataFetchingEnvironment env, String fragmentName, String fieldName, String argumentName) {
+        InlineFragment fragment = (InlineFragment) env
+                .getField()
+                .getSelectionSet()
+                .getSelections()
+                .stream()
+                .filter(selection -> ((InlineFragment) selection).getTypeCondition().getName().equals(fragmentName))
+                .findFirst()
+                .orElse(null);
+        if(fragment == null) return null;
+        Field field = (Field) fragment
+                .getSelectionSet()
+                .getSelections()
+                .stream()
+                .filter(selection -> ((Field) selection).getName().equals(fieldName))
+                .findFirst()
+                .orElse(null);
+        if(field == null) return null;
+        StringValue stringValue = (StringValue) field
+                .getArguments()
+                .stream()
+                .filter(arg -> arg.getName().equals(argumentName))
+                .map(Argument::getValue)
+                .findFirst()
+                .orElse(null);
+        if(stringValue == null) return null;
+        return stringValue.getValue();
     }
 
     @Bean
