@@ -24,5 +24,5 @@ input PostFilter {
 
 type User @tag(name: "social-media") @key(fields: "id") {
     id: Int
-    posts: [Post]
+    posts(body: String): [Post]
 }
